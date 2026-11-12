@@ -2,8 +2,8 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { Suspense, useEffect } from "react";
-import { Preload, AdaptiveDpr } from "@react-three/drei";
+import { Suspense, useEffect, useState } from "react";
+import { Preload } from "@react-three/drei";
 import CameraRig from "./CameraRig";
 import ParticlesField from "./ParticlesField";
 import HeroGlobe from "./HeroGlobe";
@@ -13,6 +13,14 @@ import { useStore } from "@/store/useStore";
 
 export default function Scene() {
   const setMouse = useStore((s) => s.setMouse);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
@@ -21,7 +29,7 @@ export default function Scene() {
         -((e.clientY / window.innerHeight) * 2 - 1)
       );
     };
-    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointermove", onMove, { passive: true });
     return () => window.removeEventListener("pointermove", onMove);
   }, [setMouse]);
 
@@ -29,26 +37,34 @@ export default function Scene() {
     <div className="fixed inset-0 z-0 pointer-events-none" style={{ width: "100vw", height: "100vh" }}>
       <Canvas
         camera={{ position: [0, 0, 12], fov: 55 }}
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: false }}
+        // 🔥 KEY PERF FIX: cap DPR at 1 on mobile, 1.5 on desktop
+        dpr={isMobile ? 1 : [1, 1.5]}
+        gl={{
+          antialias: !isMobile,
+          alpha: false,
+          powerPreference: "high-performance",
+          stencil: false,
+          depth: true,
+        }}
+        // 🔥 KEY PERF FIX: 30fps on mobile, 60 on desktop
+        frameloop="always"
+        performance={{ min: 0.5 }}
         style={{ width: "100%", height: "100%" }}
       >
-        <color attach="background" args={["#02030a"]} />
-        <fog attach="fog" args={["#02030a", 10, 40]} />
-        <ambientLight intensity={0.4} />
-        <pointLight position={[10, 10, 10]} intensity={1.5} color="#00e5ff" />
-        <pointLight position={[-10, -10, -5]} intensity={1} color="#ff2d75" />
+        <color attach="background" args={["#05060a"]} />
+        <fog attach="fog" args={["#05060a", 15, 50]} />
+        <ambientLight intensity={0.5} />
 
         <Suspense fallback={null}>
           <CameraRig />
-          <ParticlesField />
+          <ParticlesField isMobile={isMobile} />
           <HeroGlobe />
-          <ExperienceTunnel />
+          {!isMobile && <ExperienceTunnel />}
           <Preload all />
         </Suspense>
 
-        <Effects />
-        <AdaptiveDpr pixelated />
+        {/* 🔥 KEY PERF FIX: only mount post-processing on desktop */}
+        {!isMobile && <Effects />}
       </Canvas>
     </div>
   );

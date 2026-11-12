@@ -5,12 +5,12 @@ import { useStore } from "@/store/useStore";
 import { useEffect, useState } from "react";
 
 const LINKS = [
-  { label: "ORIGIN", href: "#origin" },
-  { label: "CAPABILITIES", href: "#capabilities" },
-  { label: "EXPERIENCE", href: "#experience" },
-  { label: "PROJECTS", href: "#projects" },
-  { label: "AI LAB", href: "#ai-lab" },
-  { label: "CONTACT", href: "#contact" },
+  { label: "Origin", href: "#origin" },
+  { label: "Capabilities", href: "#capabilities" },
+  { label: "Experience", href: "#experience" },
+  { label: "Projects", href: "#projects" },
+  { label: "AI Lab", href: "#ai-lab" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export default function Navbar() {
@@ -21,59 +21,68 @@ export default function Navbar() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-5 transition-all duration-300 ${
-          scrolled ? "bg-[#02030a]/80 backdrop-blur-md border-b border-white/5" : "bg-transparent"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "bg-[#05060a]/85 backdrop-blur-md border-b border-white/5 py-3"
+            : "bg-transparent py-5"
         }`}
       >
-        <a
-          href="#top"
-          className="font-black tracking-[0.2em] text-lg text-cyan-300 hover:text-white transition"
-        >
-          AC<span className="text-pink-400">.</span>
-        </a>
+        <div className="max-w-[1400px] mx-auto px-6 md:px-16 flex items-center justify-between">
+          <a href="#top" className="font-black text-lg tracking-tight text-white">
+            AC<span className="text-[#00d9ff]">.</span>
+          </a>
 
-        <div className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.25em] text-white/60">
-          {LINKS.map((l) => (
-            <a key={l.href} href={l.href} className="hover:text-cyan-300 transition">
-              {l.label}
-            </a>
-          ))}
+          <div className="hidden md:flex items-center gap-8">
+            {LINKS.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                className="text-[11px] tracking-[0.2em] uppercase text-white/50 hover:text-[#00d9ff] transition"
+              >
+                {l.label}
+              </a>
+            ))}
+          </div>
+
+          <a href="#contact" className="hidden md:inline-flex btn btn-ghost !py-2 !px-5 !text-[10px]">
+            Hire Me
+          </a>
+
+          <button
+            onClick={toggleMenu}
+            className="md:hidden flex flex-col gap-1.5 w-8 h-8 items-end justify-center"
+            aria-label="Toggle menu"
+          >
+            <span
+              className={`block h-[1.5px] bg-white transition-all ${
+                menuOpen ? "w-6 rotate-45 translate-y-[6px]" : "w-6"
+              }`}
+            />
+            <span className={`block h-[1.5px] bg-white w-4 transition-all ${menuOpen ? "opacity-0" : ""}`} />
+            <span
+              className={`block h-[1.5px] bg-white transition-all ${
+                menuOpen ? "w-6 -rotate-45 -translate-y-[6px]" : "w-5"
+              }`}
+            />
+          </button>
         </div>
-
-        <button
-          onClick={toggleMenu}
-          className="md:hidden flex flex-col gap-1.5 w-8 h-8 items-end justify-center"
-          aria-label="Toggle menu"
-        >
-          <span
-            className={`block h-[2px] bg-cyan-300 transition-all ${
-              menuOpen ? "w-6 rotate-45 translate-y-[7px]" : "w-6"
-            }`}
-          />
-          <span className={`block h-[2px] bg-cyan-300 w-4 transition-all ${menuOpen ? "opacity-0" : ""}`} />
-          <span
-            className={`block h-[2px] bg-cyan-300 transition-all ${
-              menuOpen ? "w-6 -rotate-45 -translate-y-[7px]" : "w-5"
-            }`}
-          />
-        </button>
       </nav>
 
       {menuOpen && (
-        <div className="fixed inset-0 z-40 bg-[#02030a]/95 backdrop-blur-lg md:hidden flex flex-col items-center justify-center gap-8">
+        <div className="fixed inset-0 z-40 bg-[#05060a]/97 md:hidden flex flex-col items-center justify-center gap-8">
           {LINKS.map((l) => (
             <a
               key={l.href}
               href={l.href}
               onClick={closeMenu}
-              className="text-white/70 hover:text-cyan-300 text-xl tracking-[0.25em] transition"
+              className="text-white/70 hover:text-[#00d9ff] text-lg tracking-[0.2em] uppercase transition"
             >
               {l.label}
             </a>

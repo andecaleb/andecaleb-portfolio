@@ -9,68 +9,82 @@ export default function HeroOverlay() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".hero-letter", {
-        y: 120,
+      gsap.from(".hero-eyebrow", { opacity: 0, y: 10, duration: 0.8, delay: 0.2, ease: "power3.out" });
+      gsap.from(".hero-word", {
+        y: 80,
         opacity: 0,
-        rotateX: -90,
-        stagger: 0.06,
-        duration: 1.2,
+        stagger: 0.08,
+        duration: 1,
+        delay: 0.4,
         ease: "power4.out",
-        delay: 0.3,
       });
-      gsap.from(".hero-sub", { opacity: 0, y: 20, delay: 1.4, duration: 1 });
-      gsap.from(".hero-cta", { opacity: 0, y: 20, delay: 1.8, duration: 1 });
+      gsap.from(".hero-meta > *", {
+        opacity: 0,
+        y: 16,
+        stagger: 0.1,
+        duration: 0.8,
+        delay: 1.2,
+        ease: "power3.out",
+      });
+      gsap.from(".hero-cta > *", {
+        opacity: 0,
+        y: 16,
+        stagger: 0.1,
+        duration: 0.7,
+        delay: 1.6,
+        ease: "power3.out",
+      });
     }, ref);
     return () => ctx.revert();
   }, []);
-
-  const name = "ANDE CALEB".split("");
 
   return (
     <section
       id="top"
       ref={ref}
-      className="relative h-screen flex flex-col justify-center items-center px-6 pointer-events-none"
+      className="relative min-h-screen flex flex-col justify-center px-6 md:px-16 pt-24 pb-16 pointer-events-none"
     >
-      <div className="absolute top-24 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.5em] text-cyan-400/60">
-        // PORTFOLIO v.2026
+      <div className="max-w-[1400px] w-full mx-auto">
+        <div className="hero-eyebrow eyebrow mb-8">PORTFOLIO · 2026 · ABUJA</div>
+
+        <h1 className="hero-word text-[clamp(3.5rem,12vw,11rem)] font-black leading-[0.85] tracking-[-0.04em] mb-8">
+          <span className="display block">ANDE</span>
+          <span className="display-accent block">CALEB</span>
+        </h1>
+
+        <div className="hero-meta grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12 border-t border-white/10 pt-8 max-w-3xl">
+          <div>
+            <p className="text-[10px] tracking-[0.3em] text-white/40 mb-2">ROLE</p>
+            <p className="text-sm text-white/80">AI/ML Engineer</p>
+          </div>
+          <div>
+            <p className="text-[10px] tracking-[0.3em] text-white/40 mb-2">FOCUS</p>
+            <p className="text-sm text-white/80">LLM Systems · RAG · Agents</p>
+          </div>
+          <div>
+            <p className="text-[10px] tracking-[0.3em] text-white/40 mb-2">EXPERIENCE</p>
+            <p className="text-sm text-white/80">14+ years enterprise</p>
+          </div>
+        </div>
+
+        <p className="mt-10 max-w-xl text-white/50 text-sm md:text-base leading-relaxed">
+          Building intelligent, data-driven systems that connect modern AI to real business
+          data, APIs, and enterprise workflows.
+        </p>
+
+        <div className="hero-cta mt-10 flex flex-wrap gap-4 pointer-events-auto">
+          <a href="#experience" className="btn btn-primary">
+            Explore Work →
+          </a>
+          <a href="#contact" className="btn btn-ghost">
+            Get in Touch
+          </a>
+        </div>
       </div>
 
-      <h1 className="text-6xl md:text-9xl font-black tracking-tighter flex flex-wrap justify-center">
-        {name.map((c, i) => (
-          <span
-            key={i}
-            className="hero-letter inline-block bg-gradient-to-b from-white via-white to-cyan-300 bg-clip-text text-transparent"
-          >
-            {c === " " ? "\u00A0" : c}
-          </span>
-        ))}
-      </h1>
-
-      <p className="hero-sub mt-8 text-cyan-300 tracking-[0.3em] text-xs md:text-sm">
-        DATA-DRIVEN AI SOLUTIONS EXPERT
-      </p>
-      <p className="hero-sub mt-3 text-white/50 text-sm max-w-xl text-center px-4">
-        AI / ML Engineer · Senior Software Developer · Enterprise Systems Architect
-      </p>
-
-      <div className="hero-cta mt-12 flex flex-wrap gap-4 pointer-events-auto">
-        <a
-          href="#experience"
-          className="px-8 py-3 border border-cyan-400/50 text-cyan-300 hover:bg-cyan-400/10 transition rounded-full text-xs tracking-[0.2em]"
-        >
-          EXPLORE WORK
-        </a>
-        <a
-          href="#contact"
-          className="px-8 py-3 bg-cyan-400 text-black font-semibold hover:bg-cyan-300 transition rounded-full text-xs tracking-[0.2em]"
-        >
-          GET IN TOUCH
-        </a>
-      </div>
-
-      <div className="absolute bottom-10 text-white/30 text-[10px] tracking-[0.4em] animate-pulse">
-        SCROLL TO NAVIGATE
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+        <span className="text-[10px] tracking-[0.4em] text-white/30">SCROLL</span>
+        <div className="w-[1px] h-12 bg-gradient-to-b from-white/40 to-transparent" />
       </div>
     </section>
   );
